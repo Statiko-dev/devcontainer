@@ -97,29 +97,26 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
     # Install Go tools
     && go get -u -v \
         # VS Code
-        github.com/mdempsky/gocode \
-        github.com/uudashr/gopkgs/cmd/gopkgs \
-        github.com/ramya-rao-a/go-outline \
-        github.com/acroca/go-symbols \
-        github.com/godoctor/godoctor \
-        golang.org/x/tools/cmd/guru \
-        golang.org/x/tools/cmd/gorename \
-        github.com/rogpeppe/godef \
-        github.com/zmb3/gogetdoc \
-        github.com/haya14busa/goplay/cmd/goplay \
-        github.com/sqs/goreturns \
-        github.com/josharian/impl \
-        github.com/davidrjenni/reftools/cmd/fillstruct \
-        github.com/fatih/gomodifytags \
-        github.com/cweill/gotests/... \
-        golang.org/x/tools/cmd/goimports \
-        golang.org/x/lint/golint \
-        golang.org/x/tools/cmd/gopls \
-        github.com/alecthomas/gometalinter \
-        honnef.co/go/tools/... \
-        github.com/golangci/golangci-lint/cmd/golangci-lint \
-        github.com/mgechev/revive \
-        github.com/derekparker/delve/cmd/dlv \
+        honnef.co/go/tools/...@latest \
+        golang.org/x/tools/cmd/gorename@latest \
+        golang.org/x/tools/cmd/goimports@latest \
+        golang.org/x/tools/cmd/guru@latest \
+        golang.org/x/lint/golint@latest \
+        github.com/mdempsky/gocode@latest \
+        github.com/cweill/gotests/...@latest \
+        github.com/haya14busa/goplay/cmd/goplay@latest \
+        github.com/sqs/goreturns@latest \
+        github.com/josharian/impl@latest \
+        github.com/davidrjenni/reftools/cmd/fillstruct@latest \
+        github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest  \
+        github.com/ramya-rao-a/go-outline@latest  \
+        github.com/acroca/go-symbols@latest  \
+        github.com/godoctor/godoctor@latest  \
+        github.com/rogpeppe/godef@latest  \
+        github.com/zmb3/gogetdoc@latest \
+        github.com/fatih/gomodifytags@latest  \
+        github.com/mgechev/revive@latest  \
+        github.com/go-delve/delve/cmd/dlv@latest \
         # Statiko
         github.com/axw/gocov/gocov \
         gopkg.in/matm/v1/gocov-html \
