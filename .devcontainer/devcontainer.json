@@ -1,0 +1,73 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
+{
+	"name": "Statiko environment",
+
+	// Sets the run context to one level up instead of the .devcontainer folder
+	"context": "..",
+
+	// Enable support for custom container in Visual Studio Online
+	"customContainers": true,
+
+	// Name of the Dockerfile
+	"dockerFile": "Dockerfile",
+
+	// The 'runArgs' property can be used to specify additional runtime arguments
+	"runArgs": [
+		// Uncomment the next line to use Docker from inside the container. See https://aka.ms/vscode-remote/samples/docker-in-docker for details
+		// "-v","/var/run/docker.sock:/var/run/docker.sock",
+
+		// Uncomment the next line if you will be using a ptrace-based debugger like C++, Go, and Rust
+		// "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"
+
+		// Add a non-root user to your Dockerfile. On Linux, this will prevent new files getting created as root. See https://aka.ms/vscode-remote/containers/non-root-user
+		// for the needed Dockerfile updates and then uncomment the next line.
+		"-u", "dev",
+	],
+
+	// Use 'settings' to set *default* container specific settings.json values on container create. 
+	// You can edit these settings after create using File > Preferences > Settings > Remote.
+	"settings": { 
+		// Specific shell to use in the container
+		"terminal.integrated.shell.linux": "/bin/zsh",
+		"go.delveConfig": {
+			"dlvLoadConfig": {
+				"followPointers": true,
+				"maxVariableRecurse": 1,
+				"maxStringLen": 2000,
+				"maxArrayValues": 128,
+				"maxStructFields": -1
+			}
+		},
+		"go.lintOnSave": "off",
+		"go.toolsEnvVars": {
+			//"GOPROXY": "direct"
+		},
+		"go.formatTool": "goimports",
+		"go.useLanguageServer": false
+	},
+
+	// Uncomment the next line if you want to publish any ports.
+	"appPort": [80, 443, 2265, 2379, 3000, 5001, 5002],
+
+	// Uncomment the next line to run commands after the container is created - for example installing git.
+	// "postCreateCommand": "apt-get update && apt-get install -y git",
+
+	// Add the IDs of extensions you want installed when the container is created in the array below.
+	"extensions": [
+		"bierner.github-markdown-preview",
+		"bierner.markdown-checkbox",
+		"bierner.markdown-yaml-preamble",
+		"bradlc.vscode-tailwindcss",
+		"christian-kohler.npm-intellisense",
+		"davidanson.vscode-markdownlint",
+		"dbaeumer.vscode-eslint",
+		"eg2.vscode-npm-script",
+		"jamesbirtles.svelte-vscode",
+		"mikestead.dotenv",
+		"ms-azuretools.vscode-docker",
+		"ms-vscode.go",
+		"redhat.vscode-yaml",
+		"zxh404.vscode-proto3"
+	]
+}
