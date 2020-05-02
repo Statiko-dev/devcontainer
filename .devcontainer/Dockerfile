@@ -80,23 +80,16 @@ RUN apt-get update \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-# Set username
-USER ${USERNAME}
-
 # Environmental variables for go
 ENV GOPATH /home/${USERNAME}/go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-# Install gocode-gomod
-RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
-    && cd ${GOPATH} \
-    && go get -x -d github.com/stamblerre/gocode 2>&1 \
-    && go build -o gocode-gomod github.com/stamblerre/gocode \
-    && mv gocode-gomod $GOPATH/bin/ \
-    #
-    # Install Go tools
-    && go get -u -v \
-        # VS Code
+# Go tools for VS Code - require root
+# Build Go tools w/module support
+RUN mkdir -p /tmp/gotools \
+    && cd /tmp/gotools \
+    && GOPATH=/tmp/gotools GO111MODULE=on go get -v golang.org/x/tools/gopls@latest 2>&1 \
+    && GOPATH=/tmp/gotools GO111MODULE=on go get -v \
         honnef.co/go/tools/...@latest \
         golang.org/x/tools/cmd/gorename@latest \
         golang.org/x/tools/cmd/goimports@latest \
@@ -116,15 +109,35 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
         github.com/zmb3/gogetdoc@latest \
         github.com/fatih/gomodifytags@latest  \
         github.com/mgechev/revive@latest  \
+        github.com/golangci/golangci-lint/cmd/golangci-lint@v1.26.0  \
         github.com/go-delve/delve/cmd/dlv@latest \
-        # Statiko
+    2>&1 \
+    #
+    # Build Go tools w/o module support
+    && GOPATH=/tmp/gotools go get -v github.com/alecthomas/gometalinter 2>&1 \
+    #
+    # Build gocode-gomod
+    && GOPATH=/tmp/gotools go get -x -d github.com/stamblerre/gocode 2>&1 \
+    && GOPATH=/tmp/gotools go build -o gocode-gomod github.com/stamblerre/gocode \
+    #
+    # Install Go tools
+    && mv /tmp/gotools/bin/* /usr/local/bin/ \
+    && mv gocode-gomod /usr/local/bin/
+
+# Set username
+USER ${USERNAME}
+
+# Enable Go modules
+ENV GO111MODULE=on
+
+# Go tools for Statiko
+RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
+    && cd ${GOPATH} \
+    && GO111MODULE=off go get -u -v \
         github.com/axw/gocov/gocov \
         gopkg.in/matm/v1/gocov-html \
         github.com/gobuffalo/packr/v2/packr2 \
         2>&1
-
-# Enable Go modules
-ENV GO111MODULE=on
 
 # Other environmental variables
 ENV ETCDCTL_API 3
