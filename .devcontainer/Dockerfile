@@ -127,9 +127,6 @@ RUN mkdir -p /tmp/gotools \
 # Set username
 USER ${USERNAME}
 
-# Workspace
-WORKDIR /home/${USERNAME}
-
 # Enable Go modules
 ENV GO111MODULE=on
 
@@ -141,6 +138,11 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
         gopkg.in/matm/v1/gocov-html \
         github.com/gobuffalo/packr/v2/packr2 \
         2>&1
+
+# Workspace
+RUN mkdir /workspace \
+    && chown ${USER_UID}:${USER_GID} /workspace
+WORKDIR /workspace
 
 # Other environmental variables
 ENV ETCDCTL_API 3
