@@ -7,7 +7,7 @@
 FROM ubuntu:18.04
 
 # Versions
-ENV NODE_VERSION 12.16.2
+ENV NODE_VERSION 14.2.0
 ENV GOLANG_VERSION 1.14.2
 ENV ETCD_VERSION 3.4.7
 
@@ -65,7 +65,7 @@ RUN apt-get update \
     && export PATH="/usr/local/go/bin:$PATH" \
     && go version \
     #
-    # Install etcd
+    # Install etcd (mostly for etcdctl)
     && curl -fsSLO --compressed "https://github.com/etcd-io/etcd/releases/download/v${ETCD_VERSION}/etcd-v${ETCD_VERSION}-linux-amd64.tar.gz" \
     && tar xzf etcd-v${ETCD_VERSION}-linux-amd64.tar.gz \
     && mv etcd-v${ETCD_VERSION}-linux-amd64/etcd* /usr/local/bin/ \
@@ -126,6 +126,9 @@ RUN mkdir -p /tmp/gotools \
 
 # Set username
 USER ${USERNAME}
+
+# Workspace
+WORKDIR /home/${USERNAME}
 
 # Enable Go modules
 ENV GO111MODULE=on

@@ -1,3 +1,3 @@
 # DevContainer
 
-This repository contains a custom DevContainer for Visual Studio Online, optimized for Statiko.
+This repository contains a custom DevContainer for Visual Studio Codespaces, optimized for Statiko.

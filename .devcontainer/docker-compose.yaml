@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  # Main dev container
+  dev:
+    build:
+      context: '.'
+      dockerfile: 'Dockerfile'
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    # Required for ptrace-based debuggers like C++, Go, and Rust
+    cap_add:
+      - 'SYS_PTRACE'
+    security_opt:
+      - 'seccomp:unconfined'
+    # User
+    user: 'dev'
+    # Env vars for the container
+    environment: 
+      - ETCDCTL_ENDPOINTS=http://etcd:2379
+    # Link to etcd
+    links:
+      - 'etcd'
+  # etcd
+  etcd:
+    image: 'gcr.io/etcd-development/etcd:latest'
+    restart: unless-stopped
+    volumes: 
+      - '/etcd-data'
+    command:
+      - etcd
+      - --name=etcd
+      - --data-dir=/etcd-data
+      - --advertise-client-urls=http://etcd:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --initial-advertise-peer-urls=http://etcd:2380
+      - --listen-peer-urls=http://0.0.0.0:2380
+      - --initial-cluster=etcd=http://etcd:2380
