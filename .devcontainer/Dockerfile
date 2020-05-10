@@ -124,6 +124,11 @@ RUN mkdir -p /tmp/gotools \
     && mv /tmp/gotools/bin/* /usr/local/bin/ \
     && mv gocode-gomod /usr/local/bin/
 
+# Workspace
+RUN mkdir /workspace \
+    && chown ${USER_UID}:${USER_GID} /workspace
+WORKDIR /workspace
+
 # Set username
 USER ${USERNAME}
 
@@ -138,11 +143,6 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
         gopkg.in/matm/v1/gocov-html \
         github.com/gobuffalo/packr/v2/packr2 \
         2>&1
-
-# Workspace
-RUN mkdir /workspace \
-    && chown ${USER_UID}:${USER_GID} /workspace
-WORKDIR /workspace
 
 # Other environmental variables
 ENV ETCDCTL_API 3
