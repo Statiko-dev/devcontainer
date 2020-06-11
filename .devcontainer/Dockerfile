@@ -4,12 +4,12 @@
 # https://github.com/microsoft/vscode-remote-try-node/blob/master/.devcontainer/Dockerfile
 # https://github.com/microsoft/vscode-remote-try-go/blob/master/.devcontainer/Dockerfile
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Versions
-ENV NODE_VERSION 14.2.0
-ENV GOLANG_VERSION 1.14.2
-ENV ETCD_VERSION 3.4.7
+ENV NODE_VERSION 14.4.0
+ENV GOLANG_VERSION 1.14.4
+ENV ETCD_VERSION 3.4.9
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -72,7 +72,7 @@ RUN apt-get update \
     && rm -rf etc-v${ETCD_VERSION}-linux-amd64* \
     #
     # CA Certificate for Statiko tests
-    && curl -fsSL "https://raw.githubusercontent.com/ItalyPaleAle/statiko/master/.e2e-test/misc/ca.crt" -o /usr/local/share/ca-certificates/italypaleale-ci.crt \
+    && curl -fsSL "https://raw.githubusercontent.com/statiko-dev/statiko/master/.e2e-test/misc/ca.crt" -o /usr/local/share/ca-certificates/italypaleale-ci.crt \
     && update-ca-certificates \
     #
     # Clean up
@@ -151,3 +151,4 @@ ENV ETCDCTL_API 3
 ENV DEBIAN_FRONTEND=
 
 CMD ["zsh"]
+

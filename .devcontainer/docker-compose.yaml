@@ -1,38 +1,78 @@
-version: '3'
+version: "3.6"
 
 services:
   # Main dev container
   dev:
     build:
-      context: '.'
-      dockerfile: 'Dockerfile'
-    # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity
+      context: "."
+      dockerfile: "Dockerfile"
+    # Overrides default command so things don"t shut down after the process ends.
+    command: "sleep infinity"
     # Required for ptrace-based debuggers like C++, Go, and Rust
     cap_add:
-      - 'SYS_PTRACE'
+      - "SYS_PTRACE"
     security_opt:
-      - 'seccomp:unconfined'
-    # User
-    user: 'dev'
-    # Env vars for the container
+      - "seccomp:unconfined"
+    user: "dev"
+    volumes:
+      - "workspace:/workspace"
     environment: 
-      - ETCDCTL_ENDPOINTS=http://etcd:2379
-    # Link to etcd
-    links:
-      - 'etcd'
+      - "ETCDCTL_ENDPOINTS=http://etcd:2379"
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:2265:2265"
+    networks:
+      statikodev:
+        aliases: 
+          - "dev"
   # etcd
   etcd:
-    image: 'gcr.io/etcd-development/etcd:latest'
-    restart: unless-stopped
+    image: "gcr.io/etcd-development/etcd:latest"
+    restart: "unless-stopped"
     volumes: 
-      - '/etcd-data'
+      - "/containers/etcd:/etcd-data"
+    ports:
+      - "127.0.0.1:2379:2379"
     command:
-      - etcd
-      - --name=etcd
-      - --data-dir=/etcd-data
-      - --advertise-client-urls=http://etcd:2379
-      - --listen-client-urls=http://0.0.0.0:2379
-      - --initial-advertise-peer-urls=http://etcd:2380
-      - --listen-peer-urls=http://0.0.0.0:2380
-      - --initial-cluster=etcd=http://etcd:2380
+      - "etcd"
+      - "--name=etcd"
+      - "--data-dir=/etcd-data"
+      - "--advertise-client-urls=http://etcd:2379"
+      - "--listen-client-urls=http://0.0.0.0:2379"
+      - "--initial-advertise-peer-urls=http://etcd:2380"
+      - "--listen-peer-urls=http://0.0.0.0:2380"
+      - "--initial-cluster=etcd=http://etcd:2380"
+    networks:
+      statikodev:
+        aliases: 
+          - "etcd"
+  # Pebble (Let's Encrypt)
+  pebble:
+    image: "letsencrypt/pebble"
+    restart: "unless-stopped"
+    #volumes: 
+    #  - "/containers/pebble:/pebble"
+    environment: 
+      - "PEBBLE_VA_NOSLEEP=1"
+    ports:
+      - "127.0.0.1:8055:8055"
+      - "127.0.0.1:14000:14000"
+      - "127.0.0.1:15000:15000"
+    command:
+      - "pebble"
+      #- "-config /pebble/my-pebble-config.json"
+    networks:
+      statikodev:
+        aliases: 
+          - "pebble"
+
+networks: 
+  statikodev:
+    driver: "bridge"
+    driver_opts:
+      subnet: "172.18.1.0/24"
+
+volumes:
+  workspace:
+
