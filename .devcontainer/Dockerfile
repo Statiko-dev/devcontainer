@@ -119,7 +119,7 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
     # Add oh-my-zsh for default user
     && cd ~ \
     && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
-    && chsh -s /usr/bin/zsh
+    && sudo chsh -s /usr/bin/zsh ${USERNAME}
 
 # Other environmental variables
 ENV ETCDCTL_API 3
