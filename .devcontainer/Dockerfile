@@ -46,10 +46,6 @@ RUN apt-get update \
     && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME} \
     #
-    # Add ZSH and oh-my-zsh
-    && apt-get -y install zsh \
-    && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
-    #
     # GCC for cgo
     && apt-get install -y --no-install-recommends \
         g++ \
@@ -78,7 +74,13 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    #
+    # Add ZSH and oh-my-zsh for root user
+    && cd \
+    && apt-get -y install zsh \
+    && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
+    && chsh -s /usr/bin/zsh
 
 # Environmental variables for go
 ENV GOPATH /home/${USERNAME}/go
@@ -102,7 +104,12 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
         github.com/axw/gocov/gocov \
         gopkg.in/matm/v1/gocov-html \
         github.com/gobuffalo/packr/v2/packr2 \
-        2>&1
+        2>&1 \
+    #
+    # Add ZSH and oh-my-zsh for default user
+    && cd ~ \
+    && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
+    && chsh -s /usr/bin/zsh
 
 # Other environmental variables
 ENV ETCDCTL_API 3
