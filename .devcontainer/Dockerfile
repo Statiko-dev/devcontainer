@@ -85,9 +85,9 @@ ENV GOPATH /home/${USERNAME}/go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 # Workspace
-RUN mkdir /workspace \
-    && chown ${USER_UID}:${USER_GID} /workspace
-WORKDIR /workspace
+RUN mkdir /home/${USERNAME}/statiko \
+    && chown ${USER_UID}:${USER_GID} /home/${USERNAME}/statiko
+WORKDIR /home/${USERNAME}/statiko
 
 # Set username
 USER ${USERNAME}

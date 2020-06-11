@@ -1,10 +1,7 @@
 // For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
 // https://github.com/microsoft/vscode-dev-containers/tree/master/containers/docker-existing-dockerfile
 {
-	"name": "Statiko environment",
-
-	// Workspace folder
-	"workspaceFolder": "/workspace",
+	"name": "Statiko",
 
 	// Use docker-compose and the dev service
 	"dockerComposeFile": "docker-compose.yaml",
