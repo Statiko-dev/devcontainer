@@ -27,10 +27,35 @@ RUN groupadd --gid ${USER_GID} ${USERNAME} \
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \ 
     #
-    # Verify git, GPG, process tools, lsb-release (common in install instructions for CLIs) installed, and add other tools
-    # Add also nginx
-    && apt-get -y install nginx git gnupg2 procps lsb-release \
-        ca-certificates nano vim tree curl jq screen net-tools dsniff \
+    # Verify that the required tools are installed
+    # Add also nginx, GCC for cgo
+    && apt-get install -y --no-install-recommends \
+        nginx \
+        git \
+        gnupg2 \
+        procps \
+        lsb-release \
+        ca-certificates \
+        nano \
+        vim \
+        tree \
+        curl \
+        jq \
+        screen \
+        net-tools \
+        dsniff \
+        wget \
+        zsh \
+        sudo \
+        g++ \
+        gcc \
+        libc6-dev \
+        make \
+        pkg-config \
+        locales \
+    #
+    # Locales
+    && locale-gen en_US.UTF-8 \
     #
     # Install Node.js
     && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
@@ -42,17 +67,8 @@ RUN apt-get update \
     && npm install -g eslint \
     #
     # Add sudo support for non-root users
-    && apt-get install -y sudo \
     && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
     && chmod 0440 /etc/sudoers.d/${USERNAME} \
-    #
-    # GCC for cgo
-    && apt-get install -y --no-install-recommends \
-        g++ \
-        gcc \
-        libc6-dev \
-        make \
-        pkg-config \
     #
     # Golang
     && curl -L -o go.tgz "https://golang.org/dl/go${GOLANG_VERSION}.linux-amd64.tar.gz" \
@@ -74,13 +90,7 @@ RUN apt-get update \
     # Clean up
     && apt-get autoremove -y \
     && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    #
-    # Add ZSH and oh-my-zsh for root user
-    && cd \
-    && apt-get -y install zsh \
-    && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
-    && chsh -s /usr/bin/zsh
+    && rm -rf /var/lib/apt/lists/*
 
 # Environmental variables for go
 ENV GOPATH /home/${USERNAME}/go
@@ -106,7 +116,7 @@ RUN mkdir -p ${GOPATH}/bin ${GOPATH}/src ${GOPATH}/pkg \
         github.com/gobuffalo/packr/v2/packr2 \
         2>&1 \
     #
-    # Add ZSH and oh-my-zsh for default user
+    # Add oh-my-zsh for default user
     && cd ~ \
     && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true \
     && chsh -s /usr/bin/zsh
