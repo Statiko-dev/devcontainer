@@ -11,7 +11,7 @@
 	// You can edit these settings after create using File > Preferences > Settings > Remote
 	"settings": { 
 		// Specific shell to use in the container
-		"terminal.integrated.shell.linux": "/bin/zsh",
+		"terminal.integrated.shell.linux": "/usr/bin/zsh",
 		"go.delveConfig": {
 			"dlvLoadConfig": {
 				"followPointers": true,
